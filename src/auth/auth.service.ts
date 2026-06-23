@@ -1,32 +1,48 @@
 import { Injectable } from '@nestjs/common';
-import { SignupDto } from './dto/signup.dto.js';
-import { UsersService } from 'src/users/users.service.js';
-
 import bcrypt from 'bcrypt';
+
+import { UsersService } from 'src/users/users.service.js';
+import { SignupDto } from './dto/signup.dto.js';
+import { LoginDto } from './dto/login.dto.js';
 
 @Injectable()
 export class AuthService {
     constructor(private usersService: UsersService) { }
 
-    private async hashPassword(password: string): Promise<string> {
-        return bcrypt.hash(password, 10);
+    private async comparePasswords(password: string, hash: string): Promise<boolean> {
+        return bcrypt.compare(password, hash);
     }
 
-    async signUp(signupDto: SignupDto): Promise<{ id: string; name: string | null; email: string; }> {
-        const { email, password, name } = signupDto;
+    async signUp(signupDto: SignupDto): Promise<string> {
 
-        const existingUser = await this.usersService.findOneByEmail(email);
+        const existingUser = await this.usersService.findOneByEmail(signupDto.email);
         if (existingUser) {
             throw new Error('Email already exists');
         }
 
-        const hashedPassword = await this.hashPassword(password);
-
         const user = await this.usersService.createUser(
-            email,
-            hashedPassword,
-            name
+            signupDto
         );
-        return user;
+
+        const token = 'JWT_TOKEN'; // Replace with actual JWT token generation logic
+
+        return token;
+    }
+
+    async login(loginDto: LoginDto): Promise<string> {
+        const { email, password } = loginDto;
+
+        const user = await this.usersService.findOneByEmail(email);
+        if (!user) {
+            throw new Error('Invalid email or password');
+        }
+
+        const isMatch = await this.comparePasswords(password, user.passwordHash);
+        if (!isMatch) {
+            throw new Error('Invalid email or password');
+        }
+
+        const token = 'JWT_TOKEN'; // Replace with actual JWT token generation logic
+        return token;
     }
 }
