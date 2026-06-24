@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 
 import { UsersService } from '../users/users.service.js';
+import { AUTH_ERROR_MESSAGES } from './auth.constants.js';
 import { SignupDto } from './dto/signup.dto.js';
 import { LoginDto } from './dto/login.dto.js';
 import { User } from '../users/entities/user.entity.js';
@@ -25,7 +26,7 @@ export class AuthService {
 
         const existingUser = await this.usersService.findOneByEmail(signupDto.email);
         if (existingUser) {
-            throw new ConflictException('Email already exists');
+            throw new ConflictException(AUTH_ERROR_MESSAGES.emailExists);
         }
 
         const user = await this.usersService.createUser(
@@ -40,12 +41,12 @@ export class AuthService {
 
         const user = await this.usersService.findOneByEmail(email);
         if (!user) {
-            throw new UnauthorizedException('Invalid email or password');
+            throw new UnauthorizedException(AUTH_ERROR_MESSAGES.invalidCredentials);
         }
 
         const isMatch = await this.comparePasswords(password, user.passwordHash);
         if (!isMatch) {
-            throw new UnauthorizedException('Invalid email or password');
+            throw new UnauthorizedException(AUTH_ERROR_MESSAGES.invalidCredentials);
         }
 
         return await this.generateToken(user);

@@ -1,14 +1,15 @@
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { AUTH_VALIDATION_MESSAGES } from '../../auth/auth.constants.js';
 
 export class CreateUserDto {
-    @IsNotEmpty({ message: 'Name is required' })
+    @IsNotEmpty({ message: AUTH_VALIDATION_MESSAGES.nameRequired })
     name: string;
 
-    @IsNotEmpty({ message: 'Email is required' })
-    @IsEmail({}, { message: 'Invalid email address' })
+    @IsNotEmpty({ message: AUTH_VALIDATION_MESSAGES.emailRequired })
+    @IsEmail({}, { message: AUTH_VALIDATION_MESSAGES.invalidEmail })
     email: string;
 
-    @IsNotEmpty({ message: 'Password is required' })
-    @MinLength(6, { message: 'Password must be at least 6 characters long' })
+    @IsNotEmpty({ message: AUTH_VALIDATION_MESSAGES.passwordRequired })
+    @MinLength(6, { message: AUTH_VALIDATION_MESSAGES.passwordTooShort })
     password: string;
 }

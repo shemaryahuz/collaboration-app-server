@@ -2,23 +2,28 @@ import { Body, Controller, HttpCode, HttpStatus, Post, Res } from '@nestjs/commo
 import type { CookieOptions, Response } from 'express';
 
 import { AuthService } from './auth.service.js';
+import {
+    AUTH_CONTROLLER_ROUTE,
+    AUTH_SUCCESS_MESSAGES,
+    AUTH_TOKEN_COOKIE_MAX_AGE_MS,
+    AUTH_TOKEN_COOKIE_NAME
+} from './auth.constants.js';
 import { SignupDto } from './dto/signup.dto.js';
 import { LoginDto } from './dto/login.dto.js';
 
-const TOKEN_COOKIE_NAME = 'token';
 const TOKEN_COOKIE_OPTIONS: CookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    maxAge: AUTH_TOKEN_COOKIE_MAX_AGE_MS,
 };
 
-@Controller('auth')
+@Controller(AUTH_CONTROLLER_ROUTE)
 export class AuthController {
     constructor(private authService: AuthService) { }
 
     private setTokenCookie(res: Response, token: string) {
-        res.cookie(TOKEN_COOKIE_NAME, token, TOKEN_COOKIE_OPTIONS);
+        res.cookie(AUTH_TOKEN_COOKIE_NAME, token, TOKEN_COOKIE_OPTIONS);
     }
 
     @Post('signup')
@@ -28,7 +33,7 @@ export class AuthController {
 
         this.setTokenCookie(res, token);
 
-        return { message: 'Signup successful' };
+        return { message: AUTH_SUCCESS_MESSAGES.signup };
     }
 
     @Post('login')
@@ -38,6 +43,6 @@ export class AuthController {
 
         this.setTokenCookie(res, token);
 
-        return { message: 'Login successful' };
+        return { message: AUTH_SUCCESS_MESSAGES.login };
     }
 }
