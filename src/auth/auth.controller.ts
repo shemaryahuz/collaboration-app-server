@@ -19,7 +19,7 @@ const TOKEN_COOKIE_OPTIONS: CookieOptions = {
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) { }
+    constructor(private readonly authService: AuthService) { }
 
     private setTokenCookie(res: Response, token: string) {
         res.cookie(TOKEN_COOKIE_NAME, token, TOKEN_COOKIE_OPTIONS);

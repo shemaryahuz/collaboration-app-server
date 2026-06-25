@@ -10,7 +10,10 @@ import { User } from '../users/entities/user.entity.js';
 
 @Injectable()
 export class AuthService {
-    constructor(private usersService: UsersService, private jwtService: JwtService) { }
+    constructor(
+        private readonly usersService: UsersService,
+        private readonly jwtService: JwtService
+    ) { }
 
     private async comparePasswords(password: string, hash: string): Promise<boolean> {
         return bcrypt.compare(password, hash);

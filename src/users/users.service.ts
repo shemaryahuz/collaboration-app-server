@@ -7,7 +7,7 @@ import { User } from './entities/user.entity.js';
 
 @Injectable()
 export class UsersService {
-    constructor(private prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService) { }
 
     private async hashPassword(password: string): Promise<string> {
         return bcrypt.hash(password, 10);
