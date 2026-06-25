@@ -3,10 +3,9 @@ import type { CookieOptions, Response } from 'express';
 
 import { AuthService } from './auth.service.js';
 import {
-    AUTH_CONTROLLER_ROUTE,
     AUTH_SUCCESS_MESSAGES,
-    AUTH_TOKEN_COOKIE_MAX_AGE_MS,
-    AUTH_TOKEN_COOKIE_NAME
+    TOKEN_COOKIE_MAX_AGE,
+    TOKEN_COOKIE_NAME
 } from './auth.constants.js';
 import { SignupDto } from './dto/signup.dto.js';
 import { LoginDto } from './dto/login.dto.js';
@@ -15,15 +14,15 @@ const TOKEN_COOKIE_OPTIONS: CookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: AUTH_TOKEN_COOKIE_MAX_AGE_MS,
+    maxAge: TOKEN_COOKIE_MAX_AGE,
 };
 
-@Controller(AUTH_CONTROLLER_ROUTE)
+@Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) { }
 
     private setTokenCookie(res: Response, token: string) {
-        res.cookie(AUTH_TOKEN_COOKIE_NAME, token, TOKEN_COOKIE_OPTIONS);
+        res.cookie(TOKEN_COOKIE_NAME, token, TOKEN_COOKIE_OPTIONS);
     }
 
     @Post('signup')

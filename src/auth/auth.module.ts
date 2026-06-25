@@ -4,7 +4,7 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
 import { UsersModule } from '../users/users.module.js';
-import { AUTH_JWT_DEFAULT_EXPIRES_IN, AUTH_JWT_DEFAULT_SECRET } from './auth.constants.js';
+import { JWT_DEFAULT_EXPIRES_IN, JWT_DEFAULT_SECRET } from './auth.constants.js';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 
@@ -16,9 +16,9 @@ import { AuthService } from './auth.service.js';
             imports: [ConfigModule],
             inject: [ConfigService],
             useFactory: async (configService: ConfigService): Promise<JwtModuleOptions> => ({
-                secret: configService.get<string>('JWT_SECRET', AUTH_JWT_DEFAULT_SECRET),
+                secret: configService.get<string>('JWT_SECRET', JWT_DEFAULT_SECRET),
                 signOptions: {
-                    expiresIn: configService.get<string>('JWT_EXPIRES_IN', AUTH_JWT_DEFAULT_EXPIRES_IN) as any,
+                    expiresIn: configService.get<string>('JWT_EXPIRES_IN', JWT_DEFAULT_EXPIRES_IN) as any,
                 }
             })
         })
