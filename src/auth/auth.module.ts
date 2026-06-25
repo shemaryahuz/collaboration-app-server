@@ -13,6 +13,7 @@ import { AuthService } from './auth.service.js';
         UsersModule,
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.registerAsync({
+            global: true,
             imports: [ConfigModule],
             inject: [ConfigService],
             useFactory: async (configService: ConfigService): Promise<JwtModuleOptions> => ({
