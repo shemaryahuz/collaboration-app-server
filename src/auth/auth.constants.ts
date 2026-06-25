@@ -22,4 +22,5 @@ export const AUTH_ERROR_MESSAGES = {
 export const AUTH_SUCCESS_MESSAGES = {
     signup: 'Signup successful',
     login: 'Login successful',
+    logout: 'Logout successful',
 } as const;

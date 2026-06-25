@@ -44,4 +44,12 @@ export class AuthController {
 
         return { message: AUTH_SUCCESS_MESSAGES.login };
     }
+
+    @Post('logout')
+    @HttpCode(HttpStatus.OK)
+    async logout(@Res({ passthrough: true }) res: Response) {
+        res.clearCookie(TOKEN_COOKIE_NAME, TOKEN_COOKIE_OPTIONS);
+
+        return { message: AUTH_SUCCESS_MESSAGES.logout };
+    }
 }
