@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { User } from './entities/user.entity.js';
+import { USER_SEARCH_LIMIT } from './users.constants.js';
 
 @Injectable()
 export class UsersService {
@@ -31,6 +32,18 @@ export class UsersService {
     async findOneById(id: string): Promise<User | null> {
         return this.prisma.user.findUnique({
             where: { id },
+        });
+    }
+
+    async findManyByEmail(email: string): Promise<User[] | null> {
+        return this.prisma.user.findMany({
+            where: {
+                email: {
+                    contains: email,
+                    mode: 'insensitive',
+                }
+            },
+            take: USER_SEARCH_LIMIT,
         });
     }
 }

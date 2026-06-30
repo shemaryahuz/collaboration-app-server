@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Query, Req, UseGuards } from '@nestjs/common';
 
 import { UsersService } from './users.service.js';
 import { AuthGuard } from '../auth/auth.guard.js';
@@ -20,5 +20,16 @@ export class UsersController {
         }
 
         return { user, message: USER_SUCCESS_MESSAGES.userRetrieved };
+    }
+
+    @Get('search')
+    async searchUsers(@Query('email') email: string) {
+        const users = await this.usersService.findManyByEmail(email);
+
+        if (!users) {
+            throw new NotFoundException(USER_ERROR_MESSAGES.userNotFound);
+        }
+
+        return { users, message: USER_SUCCESS_MESSAGES.userRetrieved };
     }
 }
