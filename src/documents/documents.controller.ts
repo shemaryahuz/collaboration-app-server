@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, NotFoundException } from '@nestjs/common';
 
 import { AuthGuard } from '../auth/auth.guard.js';
 import { type AuthenticatedRequest, getAuthenticatedUserId } from '../auth/auth.types.js';
@@ -28,7 +28,7 @@ export class DocumentsController {
     const documents = await this.documentsService.findAll(userId);
 
     if (!documents || documents.length === 0) {
-      return { message: DOCUMENT_ERROR_MESSAGES.documentsNotFound };
+      throw new NotFoundException(DOCUMENT_ERROR_MESSAGES.documentsNotFound);
     }
 
     return { documents, message: DOCUMENT_SUCCESS_MESSAGES.documentsRetrieved };
