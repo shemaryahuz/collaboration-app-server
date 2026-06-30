@@ -17,10 +17,6 @@ async function bootstrap() {
     })
   );
 
-  app.useGlobalInterceptors(
-    new ClassSerializerInterceptor(app.get(Reflector))
-  )
-
   await app.listen(PORT);
 
   console.log(`Server is running on http://localhost:${PORT}`);
