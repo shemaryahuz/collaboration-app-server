@@ -13,18 +13,24 @@ export class UsersService {
         return bcrypt.hash(password, 10);
     }
 
-    async findOneByEmail(email: string): Promise<User | null> {
-        return this.prisma.user.findUnique({
-            where: { email },
-        });
-    }
-
     async createUser(createUserDto: CreateUserDto): Promise<User> {
         const { email, password, name } = createUserDto;
         const passwordHash = await this.hashPassword(password);
 
         return this.prisma.user.create({
             data: { email, passwordHash, name },
+        });
+    }
+
+    async findOneByEmail(email: string): Promise<User | null> {
+        return this.prisma.user.findUnique({
+            where: { email },
+        });
+    }
+
+    async findOneById(id: string): Promise<User | null> {
+        return this.prisma.user.findUnique({
+            where: { id },
         });
     }
 }

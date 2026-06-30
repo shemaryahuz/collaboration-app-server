@@ -1,6 +1,6 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module.js';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 
 const PORT = process.env.PORT || 3000;
@@ -16,6 +16,10 @@ async function bootstrap() {
       transform: true,
     })
   );
+
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(app.get(Reflector))
+  )
 
   await app.listen(PORT);
 
