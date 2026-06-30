@@ -13,8 +13,19 @@ export class DocumentsService {
     return this.prisma.document.create({ data: createDocumentDto });
   }
 
-  findAll() {
-    return `This action returns all documents`;
+  async findAll(userId: string) {
+    return this.prisma.document.findMany({
+      where: {
+        OR: [
+          { ownerId: userId },
+          { collaborations: { some: { userId } } }
+        ]
+      },
+      include: {
+        owner: { select: { name: true, email: true } },
+      },
+      orderBy: { updatedAt: 'desc' },
+    });
   }
 
   findOne(id: number) {

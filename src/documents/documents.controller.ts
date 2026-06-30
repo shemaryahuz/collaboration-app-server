@@ -5,6 +5,7 @@ import { type AuthenticatedRequest, getAuthenticatedUserId } from '../auth/auth.
 import { DocumentsService } from './documents.service.js';
 import { CreateDocumentDto } from './dto/create-document.dto.js';
 import { UpdateDocumentDto } from './dto/update-document.dto.js';
+import { DOCUMENT_ERROR_MESSAGES, DOCUMENT_SUCCESS_MESSAGES } from './documents.constants.js';
 
 @Controller('documents')
 @UseGuards(AuthGuard)
@@ -15,12 +16,22 @@ export class DocumentsController {
   async create(@Body() createDocumentDto: CreateDocumentDto, @Req() req: AuthenticatedRequest) {
     createDocumentDto.ownerId = getAuthenticatedUserId(req);
 
-    return this.documentsService.create(createDocumentDto);
+    const document = await this.documentsService.create(createDocumentDto);
+
+    return { document, message: DOCUMENT_SUCCESS_MESSAGES.documentCreated };
   }
 
   @Get()
-  findAll() {
-    return this.documentsService.findAll();
+  async findAll(@Req() req: AuthenticatedRequest) {
+    const userId = getAuthenticatedUserId(req);
+
+    const documents = await this.documentsService.findAll(userId);
+
+    if (!documents || documents.length === 0) {
+      return { message: DOCUMENT_ERROR_MESSAGES.documentsNotFound };
+    }
+
+    return { documents, message: DOCUMENT_SUCCESS_MESSAGES.documentsRetrieved };
   }
 
   @Get(':id')
