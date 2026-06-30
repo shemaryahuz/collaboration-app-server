@@ -1,14 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+
+import { AuthGuard } from '../auth/auth.guard.js';
+import { type AuthenticatedRequest, getAuthenticatedUserId } from '../auth/auth.types.js';
 import { DocumentsService } from './documents.service.js';
 import { CreateDocumentDto } from './dto/create-document.dto.js';
 import { UpdateDocumentDto } from './dto/update-document.dto.js';
 
 @Controller('documents')
+@UseGuards(AuthGuard)
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) { }
 
   @Post()
-  create(@Body() createDocumentDto: CreateDocumentDto) {
+  async create(@Body() createDocumentDto: CreateDocumentDto, @Req() req: AuthenticatedRequest) {
+    createDocumentDto.ownerId = getAuthenticatedUserId(req);
+
     return this.documentsService.create(createDocumentDto);
   }
 

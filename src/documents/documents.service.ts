@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
+
+import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateDocumentDto } from './dto/create-document.dto.js';
 import { UpdateDocumentDto } from './dto/update-document.dto.js';
+import { Document } from './entities/document.entity.js';
 
 @Injectable()
 export class DocumentsService {
-  create(createDocumentDto: CreateDocumentDto) {
-    return 'This action adds a new document';
+  constructor(private readonly prisma: PrismaService) { }
+
+  async create(createDocumentDto: CreateDocumentDto): Promise<Document> {
+    return this.prisma.document.create({ data: createDocumentDto });
   }
 
   findAll() {
