@@ -8,4 +8,5 @@ export const DOCUMENT_SUCCESS_MESSAGES = {
     documentCreated: 'Document created successfully',
     documentRetrieved: 'Document retrieved successfully',
     documentsRetrieved: 'Documents retrieved successfully',
+    documentUpdated: 'Document updated successfully',
 } as const;

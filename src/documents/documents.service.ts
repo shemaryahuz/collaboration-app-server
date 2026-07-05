@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateDocumentDto } from './dto/create-document.dto.js';
-import { UpdateDocumentDto } from './dto/update-document.dto.js';
 import { Document } from './entities/document.entity.js';
 
 @Injectable()
@@ -32,8 +31,11 @@ export class DocumentsService {
     return `This action returns a #${id} document`;
   }
 
-  update(id: number, updateDocumentDto: UpdateDocumentDto) {
-    return `This action updates a #${id} document`;
+  async update(id: string, updateDocumentDto: CreateDocumentDto) {
+    return this.prisma.document.update({
+      where: { id },
+      data: updateDocumentDto,
+    });
   }
 
   remove(id: number) {
